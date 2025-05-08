@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Gallery</title>
+    <style>
+      * {
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+      }
+
+      .red {
+        max-width: 1500px;
+        height: 150vh;
+        background: red;
+        margin: 0px auto;
+      }
+
+      .gallery {
+        max-width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        flex-direction: row;
+        margin: 0px auto;
+      }
+
+      .right {
+        max-width: 50%;
+      }
+
+      .left {
+        height: 100vh !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 50%;
+        position: relative;
+      }
+
+      .cardSlide {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+      }
+
+      .card-container {
+        position: absolute;
+        width: fit-content;
+        height: fit-content;
+        padding: 20px 30px;
+        background: #ffffff;
+        border-top-right-radius: 14px;
+        left: 0px;
+        bottom: 0px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: flex-start;
+        z-index: 100;
+      }
+
+      .card-large-number {
+        font-style: normal;
+        font-weight: 800;
+        font-size: 56px;
+        line-height: 68px;
+        text-transform: capitalize;
+        color: #d50c3d;
+        will-change: transform, opacity;
+      }
+
+      .card-title {
+        margin: 5px 0px 20px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 22.68px;
+        line-height: 27px;
+        text-transform: capitalize;
+        color: #232826;
+        will-change: transform, opacity;
+      }
+
+      .card-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 20px;
+        color: #232826;
+        max-width: 240px;
+      }
+
+      .content-container {
+        width: fit-content;
+        height: 50%;
+        display: none;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: flex-start;
+        justify-content: space-around;
+        align-items: flex-start;
+        position: relative;
+      }
+
+      .content-heading {
+        max-width: 460px;
+        height: fit-content;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 48px;
+        line-height: 58px;
+        text-transform: uppercase;
+        color: #232826;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .content-heading h3 {
+        transform: translateY(100%);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      .number-label {
+        position: absolute;
+        top: 20%;
+        left: 72%;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 128px;
+        line-height: 34px;
+        display: flex;
+        align-items: center;
+        color: rgba(0, 0, 0, 0.06);
+        transform: translateY(20px);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      .content-paragraph {
+        max-width: 440px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 30px;
+        color: #232826;
+        position: relative;
+        transform: translateY(20px);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      .desktopPhotos {
+        height: 544px;
+        width: 630px;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
+      }
+      .desktopPhotos img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .desktopPhoto {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .image {
+        background-image: url("");
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      /* Animation classes */
+      .fade-out {
+        animation: fadeOut 0.5s forwards;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* small screen / mobile layout */
+      .mobileContent {
+        display: none;
+        width: 80vw;
+      }
+
+      .mobilePhoto {
+        width: 80vw;
+        height: 80vw;
+        margin-top: 5em;
+        border-radius: 6vw;
+      }
+      .our-work {
+        display: none;
+      }
+      @media screen and (max-width: 1150px) {
+        .gallery {
+          display: none;
+        }
+        .our-work {
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          max-width: 1200px;
+          margin: 0 auto;
+          height: 100vh;
+        }
+
+        .our-work .content-wrapper {
+          width: 100%;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+        }
+
+        .our-work .sliderparent {
+          width: 100%;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .our-work .sliderChildren {
+          position: relative;
+          width: 100%;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .our-work .cardSlideChildren {
+          width: 100%;
+          height: 100vh;
+          color: #fff;
+          border-radius: 16px;
+          position: absolute;
+          opacity: 1;
+          display: flex;
+          flex-wrap: nowrap;
+          justify-content: center;
+          align-items: center;
+          column-gap: 60px;
+          flex-direction: column-reverse;
+        }
+
+        .our-work .img-container {
+          position: absolute;
+          width: 90%;
+          height: 50vh;
+          bottom: 0%;
+          margin-bottom: 30px;
+          border-radius: 12px;
+          overflow: hidden;
+          will-change: transform, opacity;
+        }
+
+        .our-work .img-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .our-work .img-container::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15)
+          );
+          pointer-events: none;
+        }
+
+        .our-work .card-container {
+          position: absolute;
+          width: fit-content;
+          height: fit-content;
+          padding: 20px 30px 20px 10px;
+          background: #ffffff;
+          border-top-right-radius: 14px;
+          left: 0;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          display: none;
+        }
+
+        .our-work .card-large-number {
+          font-weight: 800;
+          font-size: 56px;
+          line-height: 68px;
+          text-transform: capitalize;
+          color: #d50c3d;
+        }
+
+        .our-work .card-title {
+          margin: 5px 0 20px;
+          font-weight: 700;
+          font-size: 22.68px;
+          line-height: 27px;
+          color: #232826;
+        }
+
+        .our-work .card-description {
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+          color: #232826;
+          max-width: 300px;
+        }
+
+        .our-work .content-container-child {
+          width: 90%;
+          margin: 0px auto;
+          height: auto;
+          position: absolute;
+          top: 10%;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .our-work .content-container-child .content-heading {
+          max-width: 460px;
+          font-weight: 700;
+          font-size: 48px;
+          line-height: 58px;
+          text-transform: uppercase;
+          color: #232826;
+          margin-bottom: 20px;
+        }
+        .content-container-child .content-heading h3 {
+          transform: translateY(0%);
+          opacity: 1;
+        }
+        .our-work .content-container-child .number-label {
+          position: absolute;
+          top: 19%;
+          left: 72%;
+          font-style: normal;
+          font-weight: 800;
+          font-size: 128px;
+          line-height: 34px;
+          display: flex;
+          align-items: center;
+          color: rgba(0, 0, 0, 0.06);
+          transform: translateY(0px);
+          opacity: 1;
+        }
+
+        .our-work .content-container-child .content-paragraph {
+          width: 100%;
+          font-weight: 700;
+          font-size: 24px;
+          line-height: 30px;
+          color: #232826;
+          max-width: 100%;
+          opacity: 1 !important;
+        }
+
+        @keyframes bounce {
+          0%,
+          20%,
+          50%,
+          80%,
+          100% {
+            transform: translateY(0) translateX(-50%);
+          }
+          40% {
+            transform: translateY(-20px) translateX(-50%);
+          }
+          60% {
+            transform: translateY(-10px) translateX(-50%);
+          }
+        }
+      }
+      @media screen and (max-width: 768px) {
+        .our-work .cardSlideChildren {
+          width: 90%;
+        }
+
+        .our-work .img-container,
+        .our-work .content-container-child {
+          width: 100%;
+          height: 50vh !important;
+        }
+
+        .our-work .content-container-child .content-heading h3 {
+          font-weight: 700;
+          font-size: 25px;
+          line-height: 100%;
+          letter-spacing: 0px;
+        }
+
+        .our-work .content-container-child .content-paragraph {
+          font-weight: 400;
+          font-size: 20px;
+          line-height: 25.47px;
+          letter-spacing: 0%;
+          display: -webkit-box;
+          -webkit-line-clamp: 6;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .our-work .content-container-child .number-label {
+          font-size: 60px;
+          top: 5%;
+          left: auto;
+          right: 0% !important;
+        }
+        .card-container {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="red"></div>
+
+    <!-- For Desktop Devices -->
+    <section class="gallery">
+      <div class="left">
+        <!-- desktop content -->
+        <div class="desktopPhotos">
+          <div
+            class="desktopPhoto image1 image"
+            cardLargeNumber="+2 m"
+            cardTitle="Donated Money"
+            cardDescription="People Go to bed hungry each night lorem ipsum"
+          ></div>
+
+          <div
+            class="desktopPhoto image2 image"
+            cardLargeNumber="+5 k"
+            cardTitle="Meals Provided"
+            cardDescription="Nutritious meals served to those in need"
+          ></div>
+
+          <div
+            class="desktopPhoto image3 image"
+            cardLargeNumber="+1.2 m"
+            cardTitle="Medical Aid"
+            cardDescription="Life-saving treatments provided worldwide"
+          ></div>
+
+          <div
+            class="desktopPhoto image4 image"
+            cardLargeNumber="+300"
+            cardTitle="Shelters Built"
+            cardDescription="Safe homes constructed for families"
+          ></div>
+
+          <div class="card-container">
+            <div class="card-large-number"></div>
+            <div class="card-title"></div>
+            <div class="card-description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div backimage="img/IMG1.png" class="cardSlide">
+          <div class="content-container">
+            <div class="number-label">01</div>
+            <div class="content-heading">
+              <h3>Protection program</h3>
+            </div>
+            <div class="content-paragraph">
+              In a journey spanning nearly a decade, the sponsorship and care of
+              orphans has been at the core of ulfah Organization's work. As a
+              result of this commitment, the number of orphans benefiting from
+              sponsorship programs reached 30,203 by the year 2024.
+            </div>
+          </div>
+        </div>
+
+        <div backimage="img/IMG2.png" class="cardSlide">
+          <div class="content-container">
+            <div class="number-label">02</div>
+            <div class="content-heading">
+              <h3>Nutrition initiative</h3>
+            </div>
+            <div class="content-paragraph">
+              Our nutrition programs have provided over 5 million meals to
+              children and families in food-insecure regions, helping combat
+              malnutrition and promote healthy development.
+            </div>
+          </div>
+        </div>
+
+        <div backimage="img/IMG3.png" class="cardSlide">
+          <div class="content-container">
+            <div class="number-label">03</div>
+            <div class="content-heading">
+              <h3>Healthcare access</h3>
+            </div>
+            <div class="content-paragraph">
+              Through mobile clinics and partnerships with local hospitals,
+              we've delivered essential medical care to over 1.2 million
+              patients in underserved communities around the world.
+            </div>
+          </div>
+        </div>
+
+        <div backimage="img/IMG1.png" class="cardSlide">
+          <div class="content-container">
+            <div class="number-label">04</div>
+            <div class="content-heading">
+              <h3>Housing projects</h3>
+            </div>
+            <div class="content-paragraph">
+              Our shelter initiative has constructed over 300 durable homes for
+              families displaced by conflict and natural disasters, providing
+              safety and stability to vulnerable populations.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- For Mobile Devices -->
+    <section class="our-work">
+      <div class="content-wrapper">
+        <div class="sliderparent">
+          <div class="sliderChildren">
+            <div class="cardSlideChildren" id="our-work-1">
+              <div class="img-container">
+                <img src="./img/IMG1.png" alt="image" />
+              </div>
+
+              <div class="card-container">
+                <div class="card-large-number">+2 m</div>
+                <div class="card-title">Donated money</div>
+                <div class="card-description">
+                  People Go to Bed Hungry Each Night Lorem ipsum
+                </div>
+              </div>
+
+              <div class="content-container-child">
+                <div class="number-label">01</div>
+                <div class="content-heading">
+                  <h3>Sponsoring an orphan</h3>
+                </div>
+                <div class="content-paragraph">
+                  In a journey spanning nearly a decade, the sponsorship and
+                  care of orphans has been at the core of ulfah Organization's
+                  work. As a result of this commitment, the number of orphans
+                  benefiting from sponsorship programs reached 30,203 by the
+                  year 2024.
+                </div>
+              </div>
+            </div>
+
+            <div class="cardSlideChildren" id="our-work-2">
+              <div class="img-container">
+                <img src="./img/IMG1.png" alt="image" />
+              </div>
+
+              <div class="card-container">
+                <div class="card-large-number">+2 m</div>
+                <div class="card-title">Donated money</div>
+                <div class="card-description">
+                  People Go to Bed Hungry Each Night Lorem ipsum
+                </div>
+              </div>
+
+              <div class="content-container-child">
+                <div class="number-label">02</div>
+                <div class="content-heading">
+                  <h3>Sponsoring an orphan</h3>
+                </div>
+                <div class="content-paragraph">
+                  In a journey spanning nearly a decade, the sponsorship and
+                  care of orphans has been at the core of ulfah Organization's
+                  work. As a result of this commitment, the number of orphans
+                  benefiting from sponsorship programs reached 30,203 by the
+                  year 2024.
+                </div>
+              </div>
+            </div>
+
+            <div class="cardSlideChildren" id="our-work-3">
+              <div class="img-container">
+                <img src="./img/IMG1.png" alt="image" />
+              </div>
+
+              <div class="card-container">
+                <div class="card-large-number">+2 m</div>
+                <div class="card-title">Donated money</div>
+                <div class="card-description">
+                  People Go to Bed Hungry Each Night Lorem ipsum
+                </div>
+              </div>
+
+              <div class="content-container-child">
+                <div class="number-label">03</div>
+                <div class="content-heading">
+                  <h3>Sponsoring an orphan</h3>
+                </div>
+                <div class="content-paragraph">
+                  In a journey spanning nearly a decade, the sponsorship and
+                  care of orphans has been at the core of ulfah Organization's
+                  work. As a result of this commitment, the number of orphans
+                  benefiting from sponsorship programs reached 30,203 by the
+                  year 2024.
+                </div>
+              </div>
+            </div>
+
+            <div class="cardSlideChildren" id="our-work-4">
+              <div class="img-container">
+                <img src="./img/IMG2.png" alt="image" />
+              </div>
+
+              <div class="card-container">
+                <div class="card-large-number">+2 m</div>
+                <div class="card-title">Donated money</div>
+                <div class="card-description">
+                  People Go to Bed Hungry Each Night Lorem ipsum
+                </div>
+              </div>
+
+              <div class="content-container-child">
+                <div class="number-label">04</div>
+                <div class="content-heading">
+                  <h3>Shelter project</h3>
+                </div>
+                <div class="content-paragraph">
+                  In a journey spanning nearly a decade, the sponsorship and
+                  care of orphans has been at the core of ulfah Organization's
+                  work. As a result of this commitment, the number of orphans
+                  benefiting from sponsorship programs reached 30,203 by the
+                  year 2024.
+                </div>
+              </div>
+            </div>
+
+            <div class="cardSlideChildren" id="our-work-5">
+              <div class="img-container">
+                <img src="./img/IMG3.png" alt="image" />
+              </div>
+
+              <div class="card-container">
+                <div class="card-large-number">+2 m</div>
+                <div class="card-title">Donated money</div>
+                <div class="card-description">
+                  People Go to Bed Hungry Each Night Lorem ipsum
+                </div>
+              </div>
+
+              <div class="content-container-child">
+                <div class="number-label">05</div>
+                <div class="content-heading">
+                  <h3>Protection program</h3>
+                </div>
+                <div class="content-paragraph">
+                  In a journey spanning nearly a decade, the sponsorship and
+                  care of orphans has been at the core of ulfah Organization's
+                  work. As a result of this commitment, the number of orphans
+                  benefiting from sponsorship programs reached 30,203 by the
+                  year 2024.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="red"></div>
+
+    <!-- Load GSAP and plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
+    <script>
+      // Wait for DOM to be fully loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Desktop animations
+        function setupDesktopAnimations() {
+          // Select all elements
+          const cardSlides = gsap.utils.toArray(".cardSlide");
+          const photos = gsap.utils.toArray(".desktopPhoto");
+          const cardContainer = document.querySelector(".card-container");
+          const cardNumber = document.querySelector(".card-large-number");
+          const cardTitle = document.querySelector(".card-title");
+          const cardDesc = document.querySelector(".card-description");
+
+          // Function to update card content with animation
+          function updateCardContent(photo) {
+            // Get data from photo attributes
+            const number = photo.getAttribute("cardLargeNumber");
+            const title = photo.getAttribute("cardTitle");
+            const desc = photo.getAttribute("cardDescription");
+
+            // Add fade-out animation to current content
+            cardNumber.classList.add("fade-out");
+            cardTitle.classList.add("fade-out");
+            cardDesc.classList.add("fade-out");
+
+            // After fade-out completes, update content and fade-in
+            setTimeout(() => {
+              cardNumber.textContent = number;
+              cardTitle.textContent = title;
+              cardDesc.textContent = desc;
+
+              // Remove fade-out and add fade-in
+              cardNumber.classList.remove("fade-out");
+              cardTitle.classList.remove("fade-out");
+              cardDesc.classList.remove("fade-out");
+
+              cardNumber.classList.add("fade-in");
+              cardTitle.classList.add("fade-in");
+              cardDesc.classList.add("fade-in");
+
+              // Remove fade-in after animation completes
+              setTimeout(() => {
+                cardNumber.classList.remove("fade-in");
+                cardTitle.classList.remove("fade-in");
+                cardDesc.classList.remove("fade-in");
+              }, 500);
+            }, 500);
+          }
+
+          // Set initial background images from backimage attributes
+          cardSlides.forEach((slide, index) => {
+            const backImage = slide.getAttribute("backimage");
+            if (backImage && photos[index]) {
+              photos[index].style.backgroundImage = `url(${backImage})`;
+            }
+          });
+
+          // Initially set all photos except first to be positioned below their container and hidden
+          gsap.set(photos.slice(1), {
+            yPercent: 100,
+            opacity: 0,
+            zIndex: 0
+          });
+
+          // Set first photo to be visible and active
+          gsap.set(photos[0], {
+            yPercent: 0,
+            opacity: 1,
+            zIndex: 1
+          });
+
+          // Set initial card content
+          updateCardContent(photos[0]);
+
+          // Pin the left column (with photos) while scrolling through content
+          ScrollTrigger.create({
+            trigger: ".gallery",
+            start: "top top",
+            end: "bottom bottom",
+            pin: ".left"
+          });
+
+          // Create scroll triggers for each cardSlide
+          cardSlides.forEach((slide, index) => {
+            const contentContainer = slide.querySelector(".content-container");
+            const headline = slide.querySelector("h3");
+            const numberLabel = slide.querySelector(".number-label");
+            const paragraph = slide.querySelector(".content-paragraph");
+
+            // Set initial state - all text elements hidden and container not displayed
+            gsap.set([headline, numberLabel, paragraph], {
+              opacity: 0,
+              y: "50px"
+            });
+
+            // Create animation for when the cardSlide enters the viewport
+            ScrollTrigger.create({
+              trigger: slide,
+              start: "top 30%",
+              end: "top 60%",
+              onEnter: () => {
+                // First make the container visible
+                contentContainer.style.display = "flex";
+
+                // Then animate all text elements in sequence
+                gsap.to(headline, {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.2,
+                  ease: "power3.out"
+                });
+                gsap.to(numberLabel, {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.2,
+                  ease: "power3.out",
+                  delay: 0.2
+                });
+                gsap.to(paragraph, {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.2,
+                  ease: "power3.out",
+                  delay: 0.4
+                });
+
+                // Update card content when slide enters view
+                if (photos[index]) {
+                  updateCardContent(photos[index]);
+                }
+              },
+              onLeaveBack: () => {
+                // Only hide content if not the first slide
+                if (index > 0) {
+                  contentContainer.style.display = "none";
+                }
+              },
+              once: false
+            });
+          });
+
+          // Create photo animations for all slides
+          cardSlides.forEach((slide, index) => {
+            const currentPhoto = photos[index];
+            const prevPhoto = index > 0 ? photos[index - 1] : null;
+            const nextPhoto =
+              index < photos.length - 1 ? photos[index + 1] : null;
+
+            ScrollTrigger.create({
+              trigger: slide,
+              start: "top 30%",
+              end: "top 60%",
+              onEnter: () => {
+                // Animate current photo in
+                gsap.to(currentPhoto, {
+                  yPercent: 0,
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: "power3.out",
+                  delay: 0.1
+                });
+
+                // Animate previous photo out if exists and not first photo
+                if (prevPhoto && index > 0) {
+                  gsap.to(prevPhoto, {
+                    yPercent: -100,
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: "power3.out",
+                    delay: 0.1
+                  });
+                }
+
+                // Update card content
+                updateCardContent(currentPhoto);
+              },
+              onLeaveBack: () => {
+                // Don't animate if it's the first photo
+                if (index === 0) return;
+
+                // When scrolling back, animate current photo out
+                gsap.to(currentPhoto, {
+                  yPercent: 100,
+                  opacity: 0,
+                  duration: 0.6,
+                  ease: "power3.out",
+                  delay: 0.1
+                });
+
+                // Animate previous photo in if exists
+                if (prevPhoto) {
+                  gsap.to(prevPhoto, {
+                    yPercent: 0,
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: "power3.out",
+                    delay: 0.1
+                  });
+
+                  // Update card content to previous photo
+                  updateCardContent(prevPhoto);
+                }
+              }
+            });
+          });
+        }
+
+        // Mobile animations
+        // Mobile animations
+        function setupMobileAnimations() {
+          const container = document.querySelector(".our-work");
+          const slides = gsap.utils.toArray(".cardSlideChildren");
+          const imgContainers = gsap.utils.toArray(".img-container");
+          const contentContainers = gsap.utils.toArray(
+            ".content-container-child"
+          );
+
+          // Reset any existing ScrollTriggers
+          ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+
+          // Set initial states - make sure content containers are visible
+          gsap.set(imgContainers, { y: 100, opacity: 0 });
+          gsap.set(contentContainers, {
+            opacity: 0,
+            display: "flex" // Ensure content containers are visible
+          });
+
+          // Set first slide to be visible
+          gsap.set(imgContainers[0], { y: 0, opacity: 1 });
+          gsap.set(contentContainers[0], { opacity: 1 });
+
+          // Create a single timeline for all animations
+          const masterTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: ".our-work",
+              start: "top top",
+              end: () => `+=${container.offsetHeight * (slides.length - 1)}`,
+              pin: true,
+              scrub: 0.5,
+              snap: {
+                snapTo: 1 / (slides.length - 1),
+                duration: { min: 0.2, max: 0.5 }
+              }
+            }
+          });
+
+          // Add animations for each slide
+          slides.forEach((slide, i) => {
+            if (i === 0) return; // Skip first slide as it's already visible
+
+            const position = i - 0.5;
+
+            // Image animation - slide up and fade in
+            masterTimeline
+              .to(
+                imgContainers[i - 1],
+                {
+                  y: -100,
+                  opacity: 0,
+                  duration: 0.5
+                },
+                position
+              )
+              .to(
+                imgContainers[i],
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.5
+                },
+                position
+              );
+
+            // Content animation - fade out old, fade in new
+            masterTimeline
+              .to(
+                contentContainers[i - 1],
+                {
+                  opacity: 0,
+                  duration: 0.3
+                },
+                position + 0.2
+              ) // Slight delay after image starts moving
+              .to(
+                contentContainers[i],
+                {
+                  opacity: 1,
+                  duration: 0.3
+                },
+                position + 0.2
+              );
+          });
+        }
+
+        // Check screen size and setup appropriate animations
+        function checkScreenSize() {
+          if (window.matchMedia("(max-width: 1150px)").matches) {
+            setupMobileAnimations();
+          } else {
+            setupDesktopAnimations();
+          }
+        }
+
+        // Initial setup
+        checkScreenSize();
+
+        // Handle screen resize
+        window.addEventListener("resize", function () {
+          // Debounce resize events
+          clearTimeout(this.resizeTimer);
+          this.resizeTimer = setTimeout(function () {
+            checkScreenSize();
+          }, 250);
+        });
+      });
+    </script>
+  </body>
+</html>
