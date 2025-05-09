@@ -932,7 +932,7 @@
           });
         }
 
-        // Mobile animations
+        // Mobile animations with three-photo transition
         function setupMobileAnimations() {
           const container = document.querySelector(".our-work");
           const slides = gsap.utils.toArray(".cardSlideChildren");
@@ -944,18 +944,36 @@
           // Reset any existing ScrollTriggers
           ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 
-          // Set initial states - make sure content containers are visible
-          gsap.set(imgContainers, { y: 100, opacity: 0 });
-          gsap.set(contentContainers, {
+          // Set initial states
+          gsap.set(imgContainers, {
+            yPercent: 100, // Start all images below
             opacity: 0,
-            display: "flex" // Ensure content containers are visible
+            zIndex: 0
           });
 
           // Set first slide to be visible
-          gsap.set(imgContainers[0], { y: 0, opacity: 1 });
+          gsap.set(imgContainers[0], {
+            yPercent: 0,
+            opacity: 1,
+            zIndex: 2
+          });
+
+          // Set second slide to be next in queue
+          if (imgContainers[1]) {
+            gsap.set(imgContainers[1], {
+              yPercent: 100, // Ready to come up from bottom
+              opacity: 0,
+              zIndex: 1
+            });
+          }
+
+          gsap.set(contentContainers, {
+            opacity: 0,
+            display: "flex"
+          });
           gsap.set(contentContainers[0], { opacity: 1 });
 
-          // Create a single timeline for all animations
+          // Create scroll-driven animation timeline
           const masterTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: ".our-work",
@@ -972,49 +990,94 @@
 
           // Add animations for each slide
           slides.forEach((slide, i) => {
-            if (i === 0) return; // Skip first slide as it's already visible
+            if (i === 0) return; // Skip first slide
 
             const position = i - 0.8;
+            const currentImg = imgContainers[i];
+            const prevImg = imgContainers[i - 1];
+            const nextImg = imgContainers[i + 1];
+            const currentContent = contentContainers[i];
+            const prevContent = contentContainers[i - 1];
 
-            // Image animation - slide up and fade in
-            masterTimeline
-              .to(
-                imgContainers[i - 1],
-                {
-                  y: -100,
-                  opacity: 0,
-                  duration: .8
-                },
-                position
-              )
-              .to(
-                imgContainers[i],
-                {
-                  y: 0,
-                  opacity: 1,
-                  duration: .8
-                },
-                position
-              );
+            if (!currentImg || !prevImg) return;
 
-            // Content animation - fade out old, fade in new
-            masterTimeline
-              .to(
-                contentContainers[i - 1],
-                {
-                  opacity: 0,
-                  duration: 0.6
+            // Current image moves from bottom (100%) to center (0%)
+            masterTimeline.to(
+              currentImg,
+              {
+                yPercent: 0,
+                opacity: 1,
+                zIndex: 2,
+                duration: 0.8,
+                ease: "power3.out"
+              },
+              position
+            );
+
+            // Previous image moves from center (0%) to top (-100%)
+            masterTimeline.to(
+              prevImg,
+              {
+                yPercent: -100,
+                opacity: 0,
+                zIndex: 0,
+                duration: 0.8,
+                ease: "power3.out"
+              },
+              position
+            );
+
+            // Next image (if exists) prepares at bottom (100%)
+            if (nextImg) {
+              masterTimeline.call(
+                () => {
+                  gsap.set(nextImg, {
+                    yPercent: 100,
+                    opacity: 0,
+                    zIndex: 1
+                  });
                 },
-                position + 0.2
-              ) // Slight delay after image starts moving
-              .to(
-                contentContainers[i],
-                {
-                  opacity: 1,
-                  duration: 0.6
-                },
-                position + 0.2
+                null,
+                position + 0.3
               );
+            }
+
+            // Content animations
+            masterTimeline.to(
+              prevContent,
+              {
+                opacity: 0,
+                duration: 0.8
+              },
+              position + 0.2
+            );
+
+            masterTimeline.to(
+              currentContent,
+              {
+                opacity: 1,
+                duration: 0.8
+              },
+              position + 0.2
+            );
+          });
+
+          // Handle reverse scroll (back to top)
+          ScrollTrigger.create({
+            trigger: ".our-work",
+            start: "top top",
+            end: "top 30%",
+            onLeaveBack: () => {
+              // Reset second slide to bottom position when returning to first
+              if (imgContainers[1]) {
+                gsap.to(imgContainers[1], {
+                  yPercent: 100,
+                  opacity: 0,
+                  zIndex: 1,
+                  duration: 0.8
+                });
+              }
+            }
           });
         }
 
